@@ -366,7 +366,7 @@ $ nix build <package>   # build artifact, put into store
 ..
 ```
 
-Create local symlink .result to /nix/store/v6x3cs394jgqfbi0a42pam7-hello-1.2.0
+Creates local symlink .result to /nix/store/v6x3cs394jgqfbi0a42pam7-hello-1.2.0
 
 ## Demo
 ::: notes
