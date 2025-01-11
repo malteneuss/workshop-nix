@@ -24,7 +24,6 @@ By Tim Cuthbertson CC BY 4.0, https://nixos.org
 **Nix**
 
 * Language
-* Builders
 * Package Bash
 * Package Scala
 * Package Python
@@ -46,11 +45,11 @@ switching between projects is easy, effortless, fast
 containerizsable into docker
 :::
 
-## Nix Language
-
-**Goal: Build (any) artifact**
+## Build (any) artifact
 
 TODO image sourcecode, compiler, builder script, output
+
+## Build (any) artifact
 
 **"To package in Nix"** means to write a declarative build plan
 called "derivation" containing
@@ -61,35 +60,27 @@ called "derivation" containing
 * "Builder" shell script (that runs compiler on source code)
 * ...
 
-## Nix Language
-
-**Package Derivation raw**
+## Derivation raw
 
 ```shell
-# Hello World app written in C
 $ nix derivation show nixpkgs#hello
 ```
 
 ```nix
 {
-  "/nix/store/23m1fng1dpfyb3nnchiragwpikv35grv-hello-2.12.1.drv": {
+  "/nix/store/23m1fng1dpfyb-hello-2.12.1.drv": {
     "args": [
-      "-e",
       # Builder shell script
-      "/nix/store/v6x3cs394jgqfbi0a42pam708flxaphh-default-builder.sh"
+      "/nix/store/v6x3cs394jg-default-builder.sh"
     ],
     "env": {
       "pname": "hello",
       # Source code
-      "src": "/nix/store/pa10z4ngm0g83kx9mssrqzz30s84vq7k-hello-2.12.1.tar.gz",
+      "src":    "/nix/store/pa10z4ngm0-hello-2.12.1.tar.gz",
       # C compiler
-      "stdenv": "/nix/store/m1p78gqlc0pw3sdbz3rdhklzm0g26g96-stdenv-linux",
-      "out": "/nix/store/1q8w6gl1ll0mwfkqc3c2yx005s6wwfrl-hello-2.12.1",
+      "stdenv": "/nix/store/m1p78gqlc0-stdenv-linux",
+      "out":    "/nix/store/1q8w6gl1ll-hello-2.12.1",
       ...
-    },
-    ...
-  }
-}
 ```
 
 ## Nix Language
