@@ -356,7 +356,7 @@ $ nix build <package>   # build artifact, put into store
 /nix/store/fdffffkdfj23j45r2102jfd-hello-1.2.0.drv
 
 # "Realisation" (=build)
-# Step: Fetch all inputs (sourcecode, configs, etc.)
+# Step: Fetch/copy all inputs (sourcecode, configs, etc.)
 /nix/store/9234jfkdfj23j45r2102jfd-hello-1.2.0.tar.gz
 # Step: Build dependencies
 /nix/store/34234sdfjskdfj32j4kjdsf-gcc-13.3.0
