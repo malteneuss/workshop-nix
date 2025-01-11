@@ -46,40 +46,6 @@ switching between projects is easy, effortless, fast
 containerizsable into docker
 :::
 
-## Use Cases
-
-* Reproducible artifacts (apps, environments ...)
-  ```nix
-  mkDerivation {
-    name = "myProject-1.0.0";
-    src = ./src; 
-    buildInputs = [ python311 poetry ...];
-  }
-  ```
-
-* Adhoc environments
-  ```nix
-  $ nix shell nixpkgs#poetry nixpkgs#python311 
-  $ nix run   nixpkgs#poetry
-  ```
-
-::: notes
-* \>60k packages
-* many ecosystems\
-Java, JS, Python, Rust, Haskell...
-* reproducible
-:::
-
-::: notes
-
-Demo
-Demo show nix shell 
-nix run nixpkgs#cowsay Hi
-- Find Nix Store Path of app
-readlink -f $(which java)
-
-:::
-
 ## Nix Language
 
 **Goal: Build (any) artifact**
@@ -91,7 +57,7 @@ called "derivation" containing
 
 * Project name
 * Source code
-* Compiler
+* Compiler (build & runtime dependencies)
 * "Builder" shell script (that runs compiler on source code)
 * ...
 
@@ -308,7 +274,11 @@ https://github.com/NixOS/nixpkgs/pkgs/by-name/he/hello/package.nix
 
 ## Nixpkgs
 
-Just a huge (JSON-like) attribute set:
+<small style="font-size: 9pt">
+https://github.com/NixOS/nixpkgs
+</small>
+
+is just a huge (JSON-like) attribute set:
 
 ```nix
 # pkgs =
@@ -366,17 +336,71 @@ $ nix build <package>   # build artifact, put into store
 ..
 ```
 
-Creates local symlink .result to /nix/store/v6x3cs394jgqfbi0a42pam7-hello-1.2.0
+Creates local symlink ./result to /nix/store/v6x3cs394jgqfbi0a42pam7-hello-1.2.0
 
-## Demo
-::: notes
-Build step creates a sandbox where only declared inputs are available
-and runs builder
+## Task 0 Bash
 
-- Find Nix Store Path of app
-readlink -f $(which java)
-docker https://nixos.org/guides/building-and-running-docker-images.html
-:::
+Learn `mkDerivation`.
+
+```shell
+cd task-0-bash
+
+# Try (won't work)
+./my-script.sh
+# Fix it:
+nix-build my-script.package.nix
+# Fix it until this works:
+./result/bin/my-script
+
+# Bonus: 
+nix-shell my-script.package.nix
+# Now try again (why does it work?): 
+./my-script.sh
+```
+
+Hints:
+
+* Find the necessary Nix packages for apps in the script.
+* Make the script executable.
+* Read the error messsage(s).
+
+## Builder (functions)
+
+Different ecosystems need different tools and build sequences.
+
+Nix provide different variations for convenience.
+
+* `pkgs.stdenv.mkDerivation`: Mainly for C/C++. Base function for many others.
+* `pkgs.writeShellApplication`: For Bash scripts.
+* `pkgs.buildPythonApplication`: For Python apps.
+* `pkgs.mkShell`: For shell developer environments.
+* `pkgs.dockerTools.streamLayeredImage`: For Docker images.
+* ...
+* `pkgs.buildRustApplication`: For Rust apps.
+* `pkgs.pkgsCross.aarch64-darwin...`: Same builders but for cross-compilation.
+* ...
+
+<small style="font-size: 9pt">
+Search on https://noogle.dev
+</small>
+
+## Task 1 Bash Better
+
+Learn `writeShellApplication`.
+
+```shell
+cd task-1-bash-better
+
+nix-build my-script.package.nix
+# Fix it until this works:
+./result/bin/my-script
+```
+
+Hints:
+
+* Open and read the link in the file.
+* You can use `builtins.readFile` to read file as String.
+* Read the error messsage(s).
 
 ## Further Study
 
@@ -386,6 +410,7 @@ docker https://nixos.org/guides/building-and-running-docker-images.html
 ::: {.column width="50%"}
 * **Main Page** https://nixos.org/
 * **Nix packages** https://github.com/NixOS/nixpkgs
+* **Noogle** https://noogle.dev/
 :::
 ::: {.column width="50%"}
 
