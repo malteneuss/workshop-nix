@@ -60,7 +60,7 @@ called "derivation" containing
 * "Builder" shell script (that runs compiler on source code)
 * ...
 
-## Derivation raw
+## Derivation
 
 ```shell
 $ nix derivation show nixpkgs#hello
@@ -83,27 +83,27 @@ $ nix derivation show nixpkgs#hello
       ...
 ```
 
-## Nix Language
-
-**Nix Package (simplified)**
+## Nix Package (simplified)
 
 :::::::::::::: columns
 ::: {.column width="70%"}
 
 ```nix
+# Nix code that evaluates to derivation
 mkDerivation {
-  name = "hello-1.2.0";
+  name = "hello-2.12.1";
   src = ./src; 
   buildInputs = [ make gcc ];
 }
 ```
+
 :::
 ::: {.column width="30%"}
-**Benefits**
+**Language**
 
 * Functional
-* Pure (almost)
 * Declarative
+* Pure*
 
 :::
 ::::::::::::::
@@ -112,12 +112,11 @@ mkDerivation {
 
 **≈Json + Functions**
 
-* Numbers `42`{.nix}
 * Strings `"hello"`{.nix}
+* Path `./hello.sh`{.nix}
 * List    `[1 2 3]`{.nix}
-
 * Attribute Sets `{ key = value; ... }`{.nix}
-* Let Bindings `let x = 42 in x+x`{.nix}
+* Let Bindings `let x = 42; in x+x`{.nix}
 * Functions `f x`{.nix}
 
 ::: notes
@@ -135,10 +134,10 @@ dynamically types = no type signatures/compile time
 {
   myNumber   = 3;
   myAttrSet  = { 
-      name = "hello-1.2.0"; 
-      src = ... 
+      name = "hello-2.12.1"; 
+      src = ...; 
     };
-  myString   = myAttrSet.name;
+  myString   = someAttrSet.name;
   myFunction = x: 2*x;
 }
 ```
@@ -163,8 +162,8 @@ f(3)
 ::: {.column width="50%"}
 **Nix**
 ```nix
-f = x: 2*x        # definition
-f 3               # usage
+f = x: 2*x        # Definition
+f 3               # Usage
 ```
 
 :::
@@ -178,19 +177,8 @@ f: x ↦ 2x
 ```
 :::
 
-
 ## Functions
-**Currying**
-```
-g: (ℝ,ℝ) ⟶ ℝ                      g: ℝ ⟶ (ℝ ⟶ ℝ)
-g: (x,y) ↦ x+y                    g: x ↦ (y ↦ x+y)
-```
-**Usage**
-```
-g(3,4)                            g(3)(4)
-```
 
-## Functions
 :::::::::::::: columns
 ::: {.column width="50%"}
 
@@ -204,8 +192,8 @@ g(3,4)
 ::: {.column width="50%"}
 **Nix**
 ```nix
-  g = x: y: x+y   # definition
-  g 3 4           # usage
+  g = x: y: x+y   # Definition
+  g 3 4           # Usage
 ((g 3) 4)
 ```
 
@@ -213,28 +201,28 @@ g(3,4)
 ::::::::::::::
 
 ## Functions
+
 ```nix
 # Definition somewhere in https://github.com/NixOS/nixpkgs
-mkDerivation = overrideAttrs: ...
+mkDerivation = overrideAttrSet: { ... };
 
 # Usage in your code
 mkDerivation {
-  name = "myProject-1.0.0";
+  name = "hello-2.12.1";
   src = ./src; 
 }
 ```
 
-**Resulting Derivation**
+Evaluated Derivation
+
 ```nix
 {
-  "/nix/store/23m1fng1dpfyb3nnchiragwpikv35grv-hello-2.12.1.drv": {
+  "/nix/store/23m1fng1dpfyb-hello-2.12.1.drv": {
     "args": [
-      "-e",
-      "/nix/store/v6x3cs394jgqfbi0a42pam708flxaphh-default-builder.sh"
+      # Builder shell script
+      "/nix/store/v6x3cs394jg-default-builder.sh"
     ],
-    ...
-  }
-}
+  ...
 ```
 
 ::: notes
@@ -242,55 +230,45 @@ nix derivation show nixpkgs#hello
 functions allow shorter code (code reuse) and strong customization
 :::
 
-## Nix package
+## Nix package (realistic)
 
 ```nix
 let 
- pkgs = ...;
+ pkgs = ...fetch github/nixpkgs ...;
 in
 pkgs.stdenv.mkDerivation {
-  name = "hello-1.2.0";
+  name = "hello-2.12.1";
   src = ./src; 
   buildInputs = [ pkgs.make pkgs.gcc ];
-  buildPhase = "make install";
+  buildPhase = "make";
 }
 ```
 
+::: notes
 <small style="font-size: 9pt">
 https://github.com/NixOS/nixpkgs/pkgs/by-name/he/hello/package.nix
 </small>
 
-::: notes
 :::
 
 ## Nixpkgs
 
-<small style="font-size: 9pt">
-https://github.com/NixOS/nixpkgs
-</small>
+[https://github.com/NixOS/nixpkgs]()
 
-is just a huge (JSON-like) attribute set:
+is just a huge attribute set:
 
 ```nix
-# pkgs =
+# pkgs = ...fetch github/nixpkgs ...;
 {
-  stdenv = { mkDerivation = .. ; ... }
-  ...
-  poetry = stdenv.mkDerivation {... python311 ...}
-  python311 = ..
-  ...
-  gcc = ....
-  ...
-  git = ....
-  ...
-  firefox = ...
+  stdenv = { mkDerivation = .. ; ... };
+  firefox = ...;
+  gcc = ...;
+  git = ...;
+  poetry = stdenv.mkDerivation {... python311 ...};
+  python311 = ...;
   ...
 }
 ```
-
-<small style="font-size: 9pt">
-https://github.com/NixOS/nixpkgs
-</small>
 
 ::: notes
 huge package set
@@ -298,78 +276,79 @@ ca 1.5GB
 quite fast because lazy and mkDerivation functions aren't called if not used
 :::
 
-## Search Packages
-![](img/nixos-search.png){ width=70% }
-https://search.nixos.org
-
-
-## Reproducible Builds
+## Nix Store
 
 ```shell
-$ nix build <package>   # build artifact, put into store
+# build artifact, put into Nix store
+$ nix build <package>   
 ```
 
-**Nix store**
-
-```shell
+```nix
 # "Evaluation"
 ## Step: Evaluate Nix code to raw derivation
-/nix/store/fdffffkdfj23j45r2102jfd-hello-1.2.0.drv
+/nix/store/fdffffkdfj23-hello-1.2.0.drv
 
 # "Realisation" (=build)
 # Step: Fetch/copy all inputs (sourcecode, configs, etc.)
-/nix/store/9234jfkdfj23j45r2102jfd-hello-1.2.0.tar.gz
+/nix/store/9234jfkdfj23-hello-1.2.0.tar.gz
 # Step: Build dependencies
-/nix/store/34234sdfjskdfj32j4kjdsf-gcc-13.3.0
+/nix/store/34234sdfjskd-gcc-13.3.0
 ...
-# Step: Build final artefact (app, folder) into $out variable
-/nix/store/v6x3cs394jgqfbi0a42pam7-hello-1.2.0
-..
+# Step: Build final artifact like executable
+/nix/store/v6x3cs394jgq-hello-1.2.0
+...
 ```
-
-Creates local symlink ./result to /nix/store/v6x3cs394jgqfbi0a42pam7-hello-1.2.0
 
 ## Task 0 Bash
 
-Learn `mkDerivation`.
+Try out `mkDerivation`{.nix}.
 
-```shell
+:::::::::::::: columns
+::: {.column width="60%"}
+
+```bash
 cd task-0-bash
 
 # Try (won't work)
 ./my-script.sh
 # Fix it:
 nix-build my-script.package.nix
-# Fix it until this works:
+# Fix it until this works
 ./result/bin/my-script
 
 # Bonus: 
 nix-shell my-script.package.nix
-# Now try again (why does it work?): 
+# Now try again (why does it work?)
 ./my-script.sh
 ```
 
+:::
+::: {.column width="40%"}
+
 Hints:
 
-* Find the necessary Nix packages for apps in the script.
-* Make the script executable.
-* Read the error messsage(s).
+* Find Nix packages for apps in script.
+* Make script executable.
+* Read error messsage(s).
+
+:::
+::::::::::::::
 
 ## Builder (functions)
 
-Different ecosystems need different tools and build sequences.
+Nix community provides convenient variations for different ecosystems.
 
-Nix provide different variations for convenience.
-
-* `pkgs.stdenv.mkDerivation`: Mainly for C/C++. Base function for many others.
-* `pkgs.writeShellApplication`: For Bash scripts.
-* `pkgs.buildPythonApplication`: For Python apps.
-* `pkgs.mkShell`: For shell developer environments.
-* `pkgs.dockerTools.streamLayeredImage`: For Docker images.
-* ...
-* `pkgs.buildRustApplication`: For Rust apps.
-* `pkgs.pkgsCross.aarch64-darwin...`: Same builders but for cross-compilation.
-* ...
+```nix
+pkgs.stdenv.mkDerivation    # C/C++. (Base for most others)
+pkgs.writeShellApplication  # Bash scripts.
+pkgs.buildPythonApplication # Python apps.
+pkgs.mkShell                # Shell developer environments.
+pkgs.dockerTools.streamLayeredImage # Docker images.
+...
+pkgs.buildRustApplication   # Rust apps.
+pkgs.pkgsCross.aarch64-darwin... # Builders for cross-compile.
+...
+```
 
 <small style="font-size: 9pt">
 Search on https://noogle.dev
@@ -377,9 +356,12 @@ Search on https://noogle.dev
 
 ## Task 1 Bash Better
 
-Learn `writeShellApplication`.
+Try out `writeShellApplication`{.nix}.
 
-```shell
+:::::::::::::: columns
+::: {.column width="40%"}
+
+```bash
 cd task-1-bash-better
 
 nix-build my-script.package.nix
@@ -387,11 +369,17 @@ nix-build my-script.package.nix
 ./result/bin/my-script
 ```
 
+:::
+::: {.column width="60%"}
+
 Hints:
 
-* Open and read the link in the file.
-* You can use `builtins.readFile` to read file as String.
-* Read the error messsage(s).
+* Read linked page in file.
+* Use `builtins.readFile`{.nix} to read file as String.
+* Read error messsage(s).
+
+:::
+::::::::::::::
 
 ## Further Study
 

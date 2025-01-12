@@ -514,8 +514,8 @@ build plan called “derivation” containing</p>
 <li>…</li>
 </ul>
 </section>
-<section id="derivation-raw" class="slide level2">
-<h2>Derivation raw</h2>
+<section id="derivation" class="slide level2">
+<h2>Derivation</h2>
 <pre class="shell"><code>$ nix derivation show nixpkgs#hello</code></pre>
 <div class="sourceCode" id="cb2"><pre class="sourceCode nix"><code class="sourceCode nix"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;</span>/nix/store/23m1fng1dpfyb-hello-2.12.1.drv<span class="st">&quot;</span>: {</span>
@@ -532,36 +532,36 @@ build plan called “derivation” containing</p>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;out&quot;</span>:    <span class="st">&quot;/nix/store/1q8w6gl1ll-hello-2.12.1&quot;</span>,</span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>      ...</span></code></pre></div>
 </section>
-<section id="nix-language" class="slide level2">
-<h2>Nix Language</h2>
-<p><strong>Nix Package (simplified)</strong></p>
+<section id="nix-package-simplified" class="slide level2">
+<h2>Nix Package (simplified)</h2>
 <div class="columns">
 <div class="column" style="width:70%;">
-<div class="sourceCode" id="cb3"><pre class="sourceCode nix"><code class="sourceCode nix"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>mkDerivation <span class="op">{</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="va">name</span> <span class="op">=</span> <span class="st">&quot;hello-1.2.0&quot;</span><span class="op">;</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="va">src</span> <span class="op">=</span> <span class="ss">./src</span><span class="op">;</span> </span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="va">buildInputs</span> <span class="op">=</span> <span class="op">[</span> make gcc <span class="op">];</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode nix"><code class="sourceCode nix"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Nix code that evaluates to derivation</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>mkDerivation <span class="op">{</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="va">name</span> <span class="op">=</span> <span class="st">&quot;hello-2.12.1&quot;</span><span class="op">;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="va">src</span> <span class="op">=</span> <span class="ss">./src</span><span class="op">;</span> </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="va">buildInputs</span> <span class="op">=</span> <span class="op">[</span> make gcc <span class="op">];</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 </div><div class="column" style="width:30%;">
-<p><strong>Benefits</strong></p>
+<p><strong>Language</strong></p>
 <ul>
 <li>Functional</li>
-<li>Pure (almost)</li>
 <li>Declarative</li>
+<li>Pure*</li>
 </ul>
 </div>
 </div>
 </section>
-<section id="nix-language-1" class="slide level2">
+<section id="nix-language" class="slide level2">
 <h2>Nix Language</h2>
 <p><strong>≈Json + Functions</strong></p>
 <ul>
-<li><p>Numbers <code class="sourceCode nix"><span class="dv">42</span></code></p></li>
-<li><p>Strings <code class="sourceCode nix"><span class="st">&quot;hello&quot;</span></code></p></li>
-<li><p>List <code class="sourceCode nix"><span class="op">[</span><span class="dv">1</span> <span class="dv">2</span> <span class="dv">3</span><span class="op">]</span></code></p></li>
-<li><p>Attribute Sets <code class="sourceCode nix"><span class="op">{</span> <span class="va">key</span> <span class="op">=</span> value<span class="op">;</span> ... <span class="op">}</span></code></p></li>
-<li><p>Let Bindings <code class="sourceCode nix"><span class="kw">let</span> <span class="va">x</span> <span class="op">=</span> <span class="dv">42</span> in x<span class="op">+</span>x</code></p></li>
-<li><p>Functions <code class="sourceCode nix">f x</code></p></li>
+<li>Strings <code class="sourceCode nix"><span class="st">&quot;hello&quot;</span></code></li>
+<li>Path <code class="sourceCode nix"><span class="ss">./hello.sh</span></code></li>
+<li>List <code class="sourceCode nix"><span class="op">[</span><span class="dv">1</span> <span class="dv">2</span> <span class="dv">3</span><span class="op">]</span></code></li>
+<li>Attribute Sets <code class="sourceCode nix"><span class="op">{</span> <span class="va">key</span> <span class="op">=</span> value<span class="op">;</span> ... <span class="op">}</span></code></li>
+<li>Let Bindings <code class="sourceCode nix"><span class="kw">let</span> <span class="va">x</span> <span class="op">=</span> <span class="dv">42</span><span class="op">;</span> <span class="kw">in</span> x<span class="op">+</span>x</code></li>
+<li>Functions <code class="sourceCode nix">f x</code></li>
 </ul>
 <aside class="notes">
 <p>pure = no side effects, no variables = declarative functional =
@@ -575,10 +575,10 @@ dynamically types = no type signatures/compile time</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode nix"><code class="sourceCode nix"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="va">myNumber</span>   <span class="op">=</span> <span class="dv">3</span><span class="op">;</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="va">myAttrSet</span>  <span class="op">=</span> <span class="op">{</span> </span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>      <span class="va">name</span> <span class="op">=</span> <span class="st">&quot;hello-1.2.0&quot;</span><span class="op">;</span> </span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>      <span class="va">src</span> <span class="op">=</span> ... </span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="er">}</span><span class="op">;</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="va">myString</span>   <span class="op">=</span> myAttrSet.name<span class="op">;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>      <span class="va">name</span> <span class="op">=</span> <span class="st">&quot;hello-2.12.1&quot;</span><span class="op">;</span> </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>      <span class="va">src</span> <span class="op">=</span> ...<span class="op">;</span> </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">};</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="va">myString</span>   <span class="op">=</span> someAttrSet.name<span class="op">;</span></span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="va">myFunction</span> <span class="op">=</span> <span class="va">x</span><span class="op">:</span> <span class="dv">2</span><span class="op">*</span>x<span class="op">;</span></span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <aside class="notes">
@@ -594,8 +594,8 @@ dynamically types = no type signatures/compile time</p>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">f</span>(<span class="dv">3</span>)</span></code></pre></div>
 </div><div class="column" style="width:50%;">
 <p><strong>Nix</strong></p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode nix"><code class="sourceCode nix"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>f = <span class="va">x</span><span class="op">:</span> <span class="dv">2</span><span class="op">*</span>x        <span class="co"># definition</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>f <span class="dv">3</span>               <span class="co"># usage</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode nix"><code class="sourceCode nix"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>f = <span class="va">x</span><span class="op">:</span> <span class="dv">2</span><span class="op">*</span>x        <span class="co"># Definition</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>f <span class="dv">3</span>               <span class="co"># Usage</span></span></code></pre></div>
 </div>
 </div>
 <aside class="notes">
@@ -606,180 +606,160 @@ f: x ↦ 2x</code></pre>
 </section>
 <section id="functions-1" class="slide level2">
 <h2>Functions</h2>
-<p><strong>Currying</strong></p>
-<pre><code>g: (ℝ,ℝ) ⟶ ℝ                      g: ℝ ⟶ (ℝ ⟶ ℝ)
-g: (x,y) ↦ x+y                    g: x ↦ (y ↦ x+y)</code></pre>
-<p><strong>Usage</strong></p>
-<pre><code>g(3,4)                            g(3)(4)</code></pre>
-</section>
-<section id="functions-2" class="slide level2">
-<h2>Functions</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
 <p><strong>Typescript</strong></p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> g <span class="op">=</span> (x<span class="op">,</span>y) <span class="kw">=&gt;</span> x<span class="op">+</span>y</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">g</span>(<span class="dv">3</span><span class="op">,</span><span class="dv">4</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> g <span class="op">=</span> (x<span class="op">,</span>y) <span class="kw">=&gt;</span> x<span class="op">+</span>y</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">g</span>(<span class="dv">3</span><span class="op">,</span><span class="dv">4</span>)</span></code></pre></div>
 </div><div class="column" style="width:50%;">
 <p><strong>Nix</strong></p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode nix"><code class="sourceCode nix"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>  g = <span class="va">x</span><span class="op">:</span> <span class="va">y</span><span class="op">:</span> x<span class="op">+</span>y   <span class="co"># definition</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  g <span class="dv">3</span> <span class="dv">4</span>           <span class="co"># usage</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="op">((</span>g <span class="dv">3</span><span class="op">)</span> <span class="dv">4</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode nix"><code class="sourceCode nix"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>  g = <span class="va">x</span><span class="op">:</span> <span class="va">y</span><span class="op">:</span> x<span class="op">+</span>y   <span class="co"># Definition</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  g <span class="dv">3</span> <span class="dv">4</span>           <span class="co"># Usage</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="op">((</span>g <span class="dv">3</span><span class="op">)</span> <span class="dv">4</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 </section>
-<section id="functions-3" class="slide level2">
+<section id="functions-2" class="slide level2">
 <h2>Functions</h2>
-<div class="sourceCode" id="cb12"><pre class="sourceCode nix"><code class="sourceCode nix"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Definition somewhere in https://github.com/NixOS/nixpkgs</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>mkDerivation = <span class="va">overrideAttrs</span><span class="op">:</span> ...</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Usage in your code</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>mkDerivation <span class="op">{</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="va">name</span> <span class="op">=</span> <span class="st">&quot;myProject-1.0.0&quot;</span><span class="op">;</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="va">src</span> <span class="op">=</span> <span class="ss">./src</span><span class="op">;</span> </span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<p><strong>Resulting Derivation</strong></p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode nix"><code class="sourceCode nix"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;</span>/nix/store/23m1fng1dpfyb3nnchiragwpikv35grv-hello-2.12.1.drv<span class="st">&quot;</span>: {</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;args&quot;</span>: [</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;-e&quot;</span>,</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;/nix/store/v6x3cs394jgqfbi0a42pam708flxaphh-default-builder.sh&quot;</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    ],</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    ...</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode nix"><code class="sourceCode nix"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Definition somewhere in https://github.com/NixOS/nixpkgs</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>mkDerivation = <span class="va">overrideAttrSet</span><span class="op">:</span> <span class="op">{</span> <span class="op">...</span> <span class="op">}</span>;</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Usage in your code</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>mkDerivation <span class="op">{</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="va">name</span> <span class="op">=</span> <span class="st">&quot;hello-2.12.1&quot;</span><span class="op">;</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="va">src</span> <span class="op">=</span> <span class="ss">./src</span><span class="op">;</span> </span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Evaluated Derivation</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode nix"><code class="sourceCode nix"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;</span>/nix/store/23m1fng1dpfyb-hello-2.12.1.drv<span class="st">&quot;</span>: {</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;args&quot;</span>: [</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Builder shell script</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;/nix/store/v6x3cs394jg-default-builder.sh&quot;</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  ...</span></code></pre></div>
 <aside class="notes">
 <p>nix derivation show nixpkgs#hello functions allow shorter code (code
 reuse) and strong customization</p>
 </aside>
 </section>
-<section id="nix-package" class="slide level2">
-<h2>Nix package</h2>
-<div class="sourceCode" id="cb14"><pre class="sourceCode nix"><code class="sourceCode nix"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> </span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a> <span class="va">pkgs</span> <span class="op">=</span> ...<span class="op">;</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="kw">in</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>pkgs.stdenv.mkDerivation <span class="op">{</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="va">name</span> <span class="op">=</span> <span class="st">&quot;hello-1.2.0&quot;</span><span class="op">;</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="va">src</span> <span class="op">=</span> <span class="ss">./src</span><span class="op">;</span> </span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="va">buildInputs</span> <span class="op">=</span> <span class="op">[</span> pkgs.make pkgs.gcc <span class="op">];</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="va">buildPhase</span> <span class="op">=</span> <span class="st">&quot;make install&quot;</span><span class="op">;</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<section id="nix-package-realistic" class="slide level2">
+<h2>Nix package (realistic)</h2>
+<div class="sourceCode" id="cb12"><pre class="sourceCode nix"><code class="sourceCode nix"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a> <span class="va">pkgs</span> <span class="op">=</span> ...fetch <span class="ss">github/nixpkgs</span> ...<span class="op">;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="kw">in</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>pkgs.stdenv.mkDerivation <span class="op">{</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="va">name</span> <span class="op">=</span> <span class="st">&quot;hello-2.12.1&quot;</span><span class="op">;</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="va">src</span> <span class="op">=</span> <span class="ss">./src</span><span class="op">;</span> </span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="va">buildInputs</span> <span class="op">=</span> <span class="op">[</span> pkgs.make pkgs.gcc <span class="op">];</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="va">buildPhase</span> <span class="op">=</span> <span class="st">&quot;make&quot;</span><span class="op">;</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<aside class="notes">
 <p><small style="font-size: 9pt">
 https://github.com/NixOS/nixpkgs/pkgs/by-name/he/hello/package.nix
 </small></p>
-<aside class="notes">
-
 </aside>
 </section>
 <section id="nixpkgs" class="slide level2">
 <h2>Nixpkgs</h2>
-<p><small style="font-size: 9pt"> https://github.com/NixOS/nixpkgs
-</small></p>
-<p>is just a huge (JSON-like) attribute set:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode nix"><code class="sourceCode nix"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pkgs =</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="va">stdenv</span> <span class="op">=</span> <span class="op">{</span> <span class="va">mkDerivation</span> <span class="op">=</span> .. <span class="op">;</span> ... <span class="op">}</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  ...</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  poetry = stdenv.mkDerivation <span class="op">{...</span> <span class="va">python311</span> <span class="op">...}</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  python311 = ..</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  ...</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  gcc = ....</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  ...</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  git = ....</span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  ...</span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  firefox = ...</span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  ...</span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="er">}</span></span></code></pre></div>
-<p><small style="font-size: 9pt"> https://github.com/NixOS/nixpkgs
-</small></p>
+<p><a href>https://github.com/NixOS/nixpkgs</a></p>
+<p>is just a huge attribute set:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode nix"><code class="sourceCode nix"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pkgs = ...fetch github/nixpkgs ...;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="va">stdenv</span> <span class="op">=</span> <span class="op">{</span> <span class="va">mkDerivation</span> <span class="op">=</span> .. <span class="op">;</span> ... <span class="op">};</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="va">firefox</span> <span class="op">=</span> ...<span class="op">;</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="va">gcc</span> <span class="op">=</span> ...<span class="op">;</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="va">git</span> <span class="op">=</span> ...<span class="op">;</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="va">poetry</span> <span class="op">=</span> stdenv.mkDerivation <span class="op">{...</span> <span class="va">python311</span> <span class="op">...};</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="va">python311</span> <span class="op">=</span> ...<span class="op">;</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  ...</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <aside class="notes">
 <p>huge package set ca 1.5GB quite fast because lazy and mkDerivation
 functions aren’t called if not used</p>
 </aside>
 </section>
-<section id="search-packages" class="slide level2">
-<h2>Search Packages</h2>
-<p><img data-src="img/nixos-search.png" style="width:70.0%" />
-https://search.nixos.org</p>
-</section>
-<section id="reproducible-builds" class="slide level2">
-<h2>Reproducible Builds</h2>
-<pre class="shell"><code>$ nix build &lt;package&gt;   # build artifact, put into store</code></pre>
-<p><strong>Nix store</strong></p>
-<pre class="shell"><code># &quot;Evaluation&quot;
-## Step: Evaluate Nix code to raw derivation
-/nix/store/fdffffkdfj23j45r2102jfd-hello-1.2.0.drv
-
-# &quot;Realisation&quot; (=build)
-# Step: Fetch/copy all inputs (sourcecode, configs, etc.)
-/nix/store/9234jfkdfj23j45r2102jfd-hello-1.2.0.tar.gz
-# Step: Build dependencies
-/nix/store/34234sdfjskdfj32j4kjdsf-gcc-13.3.0
-...
-# Step: Build final artefact (app, folder) into $out variable
-/nix/store/v6x3cs394jgqfbi0a42pam7-hello-1.2.0
-..</code></pre>
-<p>Creates local symlink ./result to
-/nix/store/v6x3cs394jgqfbi0a42pam7-hello-1.2.0</p>
+<section id="nix-store" class="slide level2">
+<h2>Nix Store</h2>
+<pre class="shell"><code># build artifact, put into Nix store
+$ nix build &lt;package&gt;   </code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode nix"><code class="sourceCode nix"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># &quot;Evaluation&quot;</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">## Step: Evaluate Nix code to raw derivation</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="ss">/nix/store/fdffffkdfj23-hello-1.2.0.drv</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co"># &quot;Realisation&quot; (=build)</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Step: Fetch/copy all inputs (sourcecode, configs, etc.)</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="ss">/nix/store/9234jfkdfj23-hello-1.2.0.tar.gz</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Step: Build dependencies</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="ss">/nix/store/34234sdfjskd-gcc-13.3.0</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>...</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Step: Build final artifact like executable</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="ss">/nix/store/v6x3cs394jgq-hello-1.2.0</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>...</span></code></pre></div>
 </section>
 <section id="task-0-bash" class="slide level2">
 <h2>Task 0 Bash</h2>
-<p>Learn <code>mkDerivation</code>.</p>
-<pre class="shell"><code>cd task-0-bash
-
-# Try (won&#39;t work)
-./my-script.sh
-# Fix it:
-nix-build my-script.package.nix
-# Fix it until this works:
-./result/bin/my-script
-
-# Bonus: 
-nix-shell my-script.package.nix
-# Now try again (why does it work?): 
-./my-script.sh</code></pre>
+<p>Try out <code class="sourceCode nix">mkDerivation</code>.</p>
+<div class="columns">
+<div class="column" style="width:60%;">
+<div class="sourceCode" id="cb16"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> task-0-bash</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Try (won&#39;t work)</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="ex">./my-script.sh</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Fix it:</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-build</span> my-script.package.nix</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Fix it until this works</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="ex">./result/bin/my-script</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Bonus: </span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-shell</span> my-script.package.nix</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Now try again (why does it work?)</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="ex">./my-script.sh</span></span></code></pre></div>
+</div><div class="column" style="width:40%;">
 <p>Hints:</p>
 <ul>
-<li>Find the necessary Nix packages for apps in the script.</li>
-<li>Make the script executable.</li>
-<li>Read the error messsage(s).</li>
+<li>Find Nix packages for apps in script.</li>
+<li>Make script executable.</li>
+<li>Read error messsage(s).</li>
 </ul>
+</div>
+</div>
 </section>
 <section id="builder-functions" class="slide level2">
 <h2>Builder (functions)</h2>
-<p>Different ecosystems need different tools and build sequences.</p>
-<p>Nix provide different variations for convenience.</p>
-<ul>
-<li><code>pkgs.stdenv.mkDerivation</code>: Mainly for C/C++. Base
-function for many others.</li>
-<li><code>pkgs.writeShellApplication</code>: For Bash scripts.</li>
-<li><code>pkgs.buildPythonApplication</code>: For Python apps.</li>
-<li><code>pkgs.mkShell</code>: For shell developer environments.</li>
-<li><code>pkgs.dockerTools.streamLayeredImage</code>: For Docker
-images.</li>
-<li>…</li>
-<li><code>pkgs.buildRustApplication</code>: For Rust apps.</li>
-<li><code>pkgs.pkgsCross.aarch64-darwin...</code>: Same builders but for
-cross-compilation.</li>
-<li>…</li>
-</ul>
+<p>Nix community provides convenient variations for different
+ecosystems.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode nix"><code class="sourceCode nix"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>pkgs.stdenv.mkDerivation    <span class="co"># C/C++. (Base for most others)</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>pkgs.writeShellApplication  <span class="co"># Bash scripts.</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>pkgs.buildPythonApplication <span class="co"># Python apps.</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>pkgs.mkShell                <span class="co"># Shell developer environments.</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>pkgs.dockerTools.streamLayeredImage <span class="co"># Docker images.</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>...</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>pkgs.buildRustApplication   <span class="co"># Rust apps.</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>pkgs.pkgsCross.aarch64<span class="op">-</span>darwin... <span class="co"># Builders for cross-compile.</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>...</span></code></pre></div>
 <p><small style="font-size: 9pt"> Search on https://noogle.dev
 </small></p>
 </section>
 <section id="task-1-bash-better" class="slide level2">
 <h2>Task 1 Bash Better</h2>
-<p>Learn <code>writeShellApplication</code>.</p>
-<pre class="shell"><code>cd task-1-bash-better
-
-nix-build my-script.package.nix
-# Fix it until this works:
-./result/bin/my-script</code></pre>
+<p>Try out <code class="sourceCode nix">writeShellApplication</code>.</p>
+<div class="columns">
+<div class="column" style="width:40%;">
+<div class="sourceCode" id="cb18"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> task-1-bash-better</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-build</span> my-script.package.nix</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Fix it until this works:</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="ex">./result/bin/my-script</span></span></code></pre></div>
+</div><div class="column" style="width:40%;">
 <p>Hints:</p>
 <ul>
-<li>Open and read the link in the file.</li>
-<li>You can use <code>builtins.readFile</code> to read file as
-String.</li>
-<li>Read the error messsage(s).</li>
+<li>Read linked page in file.</li>
+<li>Use <code class="sourceCode nix"><span class="bu">builtins</span>.readFile</code>
+to read file as String.</li>
+<li>Read error messsage(s).</li>
 </ul>
+</div>
+</div>
 </section>
 <section id="further-study" class="slide level2">
 <h2>Further Study</h2>
