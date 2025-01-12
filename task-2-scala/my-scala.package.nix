@@ -1,5 +1,5 @@
 let 
-  sources = import ../../pinned-nixpkgs/sources.nix;
+  sources = import ../pinned-nixpkgs/sources.nix;
   # use 3rd party for mkSbtDerivation builder
   # https://github.com/zaninime/sbt-derivation
   sbtOverlay = import "${sources.sbt-derivation}/overlay.nix";

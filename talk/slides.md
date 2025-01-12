@@ -344,7 +344,7 @@ pkgs.writeShellApplication  # Bash scripts.
 pkgs.mkSbtDerivation        # Scala apps. (3rd party)
 pkgs.buildPythonApplication # Python apps.
 pkgs.mkShell                # Shell developer environments.
-pkgs.dockerTools.streamLayeredImage # Docker images.
+pkgs.dockerTools.buildImage # Docker images.
 ...
 pkgs.buildRustApplication   # Rust apps.
 pkgs.pkgsCross.aarch64-darwin... # Builders for cross-compile.
@@ -387,7 +387,7 @@ Hints:
 Try out `mkSbtDerivation`{.nix}.
 
 :::::::::::::: columns
-::: {.column width="40%"}
+::: {.column width="60%"}
 
 ```bash
 cd task-2-scala
@@ -398,7 +398,7 @@ nix-build my-scala.package.nix
 ```
 
 :::
-::: {.column width="60%"}
+::: {.column width="40%"}
 
 Hints:
 
@@ -409,9 +409,23 @@ Hints:
 :::
 ::::::::::::::
 
+## Task 3 Scala Docker
+
+Try out `buildImage`{.nix}.
+
+```bash
+cd task-3-scala-docker
+
+nix-build my-docker.package.nix
+# Fix it until this works:
+docker load < result
+docker run <image-tag>
+# Quirk: ARM Mac needs cross-compiled ARM Linux image. Use
+pkgsCross = pkgs.pkgsCross.aarch64-linux;
+```
+
 ## Further Study
 
-![](img/nix-logo.svg){ width=10% }
 
 :::::::::::::: columns
 ::: {.column width="50%"}
@@ -429,6 +443,7 @@ Hints:
 
 
 ::: notes
+![](img/nix-logo.svg){ width=10% }
 used by Mozilla for Firefox, Target, Atlassian for Marketplace, Klarna
 EU commission
 :::
