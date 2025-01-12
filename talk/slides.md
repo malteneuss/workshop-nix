@@ -403,6 +403,7 @@ nix-build my-scala.package.nix
 Hints:
 
 * Read linked page in file.
+* You can use `sbt assembly` for a fat jar.
 * Read error messsage(s).
 
 :::

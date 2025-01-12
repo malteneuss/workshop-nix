@@ -2,12 +2,12 @@ let
   sources = import ../../pinned-nixpkgs/sources.nix;
   # use 3rd party sbt-derivation builder
   # https://github.com/zaninime/sbt-derivation
-  sbt-derivation = import "${sources.sbt-derivation}/overlay.nix";
+  sbtOverlay = import "${sources.sbt-derivation}/overlay.nix";
   # Replace pkgs.jdk (default version 21) with a headless 23 version
   jdkOverlay = self: super: {
     jdk = super.jdk23_headless;
   };
-  pkgs = import sources.nixpkgs {overlays = [jdkOverlay sbt-derivation];};
+  pkgs = import sources.nixpkgs {overlays = [jdkOverlay sbtOverlay];};
 in
 # Source https://github.com/rgueldem/nix-scala-example
 pkgs.mkSbtDerivation {
