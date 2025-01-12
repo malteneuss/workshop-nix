@@ -730,13 +730,14 @@ $ nix build &lt;package&gt;   </code></pre>
 ecosystems.</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode nix"><code class="sourceCode nix"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>pkgs.stdenv.mkDerivation    <span class="co"># C/C++. (Base for most others)</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>pkgs.writeShellApplication  <span class="co"># Bash scripts.</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>pkgs.buildPythonApplication <span class="co"># Python apps.</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>pkgs.mkShell                <span class="co"># Shell developer environments.</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>pkgs.dockerTools.streamLayeredImage <span class="co"># Docker images.</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>...</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>pkgs.buildRustApplication   <span class="co"># Rust apps.</span></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>pkgs.pkgsCross.aarch64<span class="op">-</span>darwin... <span class="co"># Builders for cross-compile.</span></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>...</span></code></pre></div>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>pkgs.mkSbtDerivation        <span class="co"># Scala apps. (3rd party)</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>pkgs.buildPythonApplication <span class="co"># Python apps.</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>pkgs.mkShell                <span class="co"># Shell developer environments.</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>pkgs.dockerTools.streamLayeredImage <span class="co"># Docker images.</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>...</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>pkgs.buildRustApplication   <span class="co"># Rust apps.</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>pkgs.pkgsCross.aarch64<span class="op">-</span>darwin... <span class="co"># Builders for cross-compile.</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>...</span></code></pre></div>
 <p><small style="font-size: 9pt"> Search on https://noogle.dev
 </small></p>
 </section>
@@ -750,12 +751,31 @@ ecosystems.</p>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-build</span> my-script.package.nix</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Fix it until this works:</span></span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="ex">./result/bin/my-script</span></span></code></pre></div>
-</div><div class="column" style="width:40%;">
+</div><div class="column" style="width:60%;">
 <p>Hints:</p>
 <ul>
 <li>Read linked page in file.</li>
 <li>Use <code class="sourceCode nix"><span class="bu">builtins</span>.readFile</code>
 to read file as String.</li>
+<li>Read error messsage(s).</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="task-2-scala" class="slide level2">
+<h2>Task 2 Scala</h2>
+<p>Try out <code class="sourceCode nix">mkSbtDerivation</code>.</p>
+<div class="columns">
+<div class="column" style="width:40%;">
+<div class="sourceCode" id="cb19"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> task-2-scala</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-build</span> my-scala.package.nix</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Fix it until this works:</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="ex">./result/bin/my-scala</span></span></code></pre></div>
+</div><div class="column" style="width:60%;">
+<p>Hints:</p>
+<ul>
+<li>Read linked page in file.</li>
 <li>Read error messsage(s).</li>
 </ul>
 </div>

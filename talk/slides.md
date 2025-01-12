@@ -341,6 +341,7 @@ Nix community provides convenient variations for different ecosystems.
 ```nix
 pkgs.stdenv.mkDerivation    # C/C++. (Base for most others)
 pkgs.writeShellApplication  # Bash scripts.
+pkgs.mkSbtDerivation        # Scala apps. (3rd party)
 pkgs.buildPythonApplication # Python apps.
 pkgs.mkShell                # Shell developer environments.
 pkgs.dockerTools.streamLayeredImage # Docker images.
@@ -376,6 +377,32 @@ Hints:
 
 * Read linked page in file.
 * Use `builtins.readFile`{.nix} to read file as String.
+* Read error messsage(s).
+
+:::
+::::::::::::::
+
+## Task 2 Scala
+
+Try out `mkSbtDerivation`{.nix}.
+
+:::::::::::::: columns
+::: {.column width="40%"}
+
+```bash
+cd task-2-scala
+
+nix-build my-scala.package.nix
+# Fix it until this works:
+./result/bin/my-scala
+```
+
+:::
+::: {.column width="60%"}
+
+Hints:
+
+* Read linked page in file.
 * Read error messsage(s).
 
 :::
