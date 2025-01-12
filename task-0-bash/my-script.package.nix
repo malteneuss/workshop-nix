@@ -4,7 +4,8 @@ let
 in
 pkgs.stdenv.mkDerivation {
   # Upstream name of what i am packaging
-  name = "???";
+  pname = "???";
+  version = "1.0.0";
 
   # Source code
   src = "???";

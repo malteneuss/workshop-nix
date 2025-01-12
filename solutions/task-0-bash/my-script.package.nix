@@ -3,7 +3,8 @@ let
   pkgs = import sources.nixpkgs {};
 in
 pkgs.stdenv.mkDerivation {
-  name = "my-arbitrary-upstream-name";
+  pname = "my-arbitrary-upstream-name";
+  version = "1.0.0";
 
   src = ./my-script.sh;
   unpackPhase = ":";
