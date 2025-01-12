@@ -360,7 +360,7 @@ Search on https://noogle.dev
 Try out `writeShellApplication`{.nix}.
 
 :::::::::::::: columns
-::: {.column width="40%"}
+::: {.column width="55%"}
 
 ```bash
 cd task-1-bash-better
