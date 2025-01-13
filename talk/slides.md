@@ -49,7 +49,7 @@ containerizsable into docker
 called "derivation" containing
 
 * Source code
-* Compiler (build & runtime dependencies)
+* Compiler/Build (and runtime) tools
 * "Builder" shell script (that runs compiler on source code)
 * ...
 
@@ -238,6 +238,7 @@ pkgs.stdenv.mkDerivation {
   src = ./src; 
   buildInputs = [ pkgs.make pkgs.gcc ];
   buildPhase = "make";
+  installPhase = "make install";
 }
 ```
 
@@ -253,7 +254,7 @@ pkgs.stdenv.mkDerivation {
   buildInputs = [ pkgs.make pkgs.gcc ];
   # Builder script customization hooks.
   # "Phases" get called as Bash functions.
-  buildPhase = "make build";
+  buildPhase = "make";
   # Write final artifact into folder $out.
   # $out is "/nix/store/v6x3cs39...-hello-2.12.1"
   installPhase = "make install";
@@ -312,7 +313,8 @@ $ nix build <package>
 
 # "Realisation" (=build)
 # Step: Fetch/copy all inputs (sourcecode, configs, etc.)
-/nix/store/9234jfkdfj23-hello-2.12.1.tar.gz
+/nix/store/9qz6i3jr3gsy-source
+#/nix/store/9234jfkdfj23-hello-2.12.1.tar.gz
 # Step: Build dependencies
 /nix/store/34234sdfjskd-gcc-13.3.0
 ...
@@ -340,7 +342,7 @@ nix-build my-script.package.nix
 
 # Bonus: 
 nix-shell my-script.package.nix
-# Now try again (why does it work?)
+# Now try again (why does this work?)
 ./my-script.sh
 ```
 
@@ -438,11 +440,44 @@ Try out `buildImage`{.nix}.
 ```bash
 cd task-3-scala-docker
 
-nix-build my-docker.package.nix
+nix-build my-scala-docker.package.nix
+# Fix it until this works:
+docker load < result
+# Does it work?
+docker run <dockername:tag>
+# Quirk: ARM Mac Docker needs ARM Linux image.
+# Try cross-compilation
+pkgsCross = pkgs.pkgsCross.aarch64-linux;
+```
+
+## Task 4 Rust
+
+Try out `buildRustApplication`{.nix}.
+
+```bash
+cd task-4-rust
+
+nix-build my-rust.package.nix
+# Fix it until this works:
+./result/bin/my-rust
+# Quirk: ARM Mac Docker needs ARM Linux image.
+# Try cross-compilation
+pkgsCross = pkgs.pkgsCross.aarch64-linux;
+```
+
+## Task 5 Rust Docker
+
+Try out `buildImage`{.nix}.
+
+```bash
+cd task-5-rust-docker
+
+nix-build my-rust-docker.package.nix
 # Fix it until this works:
 docker load < result
 docker run <dockername:tag>
-# Quirk: ARM Mac needs cross-compiled ARM Linux image. Use
+# Quirk: ARM Mac Docker needs ARM Linux image.
+# Try cross-compilation
 pkgsCross = pkgs.pkgsCross.aarch64-linux;
 ```
 

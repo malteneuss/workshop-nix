@@ -16,7 +16,10 @@ pkgs.mkSbtDerivation {
 
   installPhase = ''
     mkdir -p $out/bin
+    # A place to put our java jar(s)
     mkdir -p $out/share/java
+    # Peek into sandboxed build directory
+    # ls -ahl target/scala-3.3.3
 
     # ???
 

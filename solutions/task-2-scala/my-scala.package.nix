@@ -14,7 +14,7 @@ pkgs.mkSbtDerivation {
   pname = "my-scala";
   version = "1.0.0";
 
-  src = ./.;
+  src = pkgs.lib.cleanSource ./.;
   depsSha256 = "sha256-DXGqJCvcWhmNdr5o6wKwWYcAPwnmxapuRIsXbeCgzHU=";
 
   # mkSbtDerivation will automatically add pkgs.sbt and pkgs.jdk to buildInputs

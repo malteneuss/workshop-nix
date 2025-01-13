@@ -1,4 +1,3 @@
-# { pkgs ? null }:
 let 
   sources = import ../../pinned-nixpkgs/sources.nix;
   # use 3rd party sbt-derivation builder
@@ -8,7 +7,10 @@ let
   jdkOverlay = self: super: {
     jdk = super.jdk23_headless;
   };
+  # native (Arm Mac) apps for your computer
   pkgs = import sources.nixpkgs {overlays = [jdkOverlay sbtOverlay];};
+  # native Arm Linux apps
+  pkgsNativeArmLinux = import sources.nixpkgs {overlays = [jdkOverlay]; system = "aarch64-linux";};
 in
 # Source https://github.com/rgueldem/nix-scala-example
 pkgs.mkSbtDerivation {
@@ -16,11 +18,10 @@ pkgs.mkSbtDerivation {
   version = "1.0.0";
 
   src = pkgs.lib.cleanSource ./.;
-
   depsSha256 = "sha256-DXGqJCvcWhmNdr5o6wKwWYcAPwnmxapuRIsXbeCgzHU=";
 
   # mkSbtDerivation will automatically add pkgs.sbt and pkgs.jdk to buildInputs
-  nativeBuildInputs = [pkgs.makeWrapper];
+  buildInputs = [pkgsNativeArmLinux.makeWrapper];
 
   # project/plugins.sbt mentions the sbt-assembly plugin
   # to help create a convenient fat jar ./target/scala-3.3.3/my-scala-assembly-1.0.0.jar
@@ -34,7 +35,7 @@ pkgs.mkSbtDerivation {
 
     cp target/scala-3.3.3/my-scala-assembly-1.0.0.jar $out/share/java
 
-    makeWrapper ${pkgs.jdk}/bin/java $out/bin/my-scala \
+    makeWrapper ${pkgsNativeArmLinux.jdk}/bin/java $out/bin/my-scala \
       --add-flags "-cp \"$out/share/java/*\" Main"
   '';
 }
