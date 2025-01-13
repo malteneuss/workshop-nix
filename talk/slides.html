@@ -480,12 +480,10 @@ https://nixos.org </small></p>
 </div><div class="column" style="width:50%;">
 <p><strong>Nix</strong></p>
 <ul>
-<li>Language</li>
-<li>Package Bash</li>
-<li>Package Scala</li>
-<li>Package Python</li>
-<li>Package Developer Environments</li>
-<li>Package Docker Images</li>
+<li>Motivation</li>
+<li>Nix Language</li>
+<li>Builders (Bash, Scala, Docker etc.)</li>
+<li>Exercises</li>
 </ul>
 </div>
 </div>
@@ -498,21 +496,19 @@ packages as Arch Linux AUR</p>
 fast containerizsable into docker</p>
 </aside>
 </section>
-<section id="build-any-artifact" class="slide level2">
-<h2>Build (any) artifact</h2>
-<p>TODO image sourcecode, compiler, builder script, output</p>
-</section>
-<section id="build-any-artifact-1" class="slide level2">
-<h2>Build (any) artifact</h2>
+<section id="motivation-build-any-artifact" class="slide level2">
+<h2>Motivation: Build (any) artifact</h2>
 <p><strong>“To package in Nix”</strong> means to write a declarative
 build plan called “derivation” containing</p>
 <ul>
-<li>Project name</li>
 <li>Source code</li>
 <li>Compiler (build &amp; runtime dependencies)</li>
 <li>“Builder” shell script (that runs compiler on source code)</li>
 <li>…</li>
 </ul>
+<aside class="notes">
+<p>Pin everything that modifies final build artifact.</p>
+</aside>
 </section>
 <section id="derivation" class="slide level2">
 <h2>Derivation</h2>
@@ -520,7 +516,7 @@ build plan called “derivation” containing</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode nix"><code class="sourceCode nix"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;</span>/nix/store/23m1fng1dpfyb-hello-2.12.1.drv<span class="st">&quot;</span>: {</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;args&quot;</span>: [</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Builder shell script</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>      <span class="co"># &quot;Builder&quot; shell script with customization hooks</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;/nix/store/v6x3cs394jg-default-builder.sh&quot;</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    ],</span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;env&quot;</span>: {</span>
@@ -619,8 +615,8 @@ f: x ↦ 2x</code></pre>
 </div>
 </div>
 </section>
-<section id="functions-2" class="slide level2">
-<h2>Functions</h2>
+<section id="builder-functions" class="slide level2">
+<h2>Builder Functions</h2>
 <div class="sourceCode" id="cb10"><pre class="sourceCode nix"><code class="sourceCode nix"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Definition somewhere in https://github.com/NixOS/nixpkgs</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>mkDerivation = <span class="va">overrideAttrSet</span><span class="op">:</span> <span class="op">{</span> <span class="op">...</span> <span class="op">}</span>;</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -653,26 +649,47 @@ reuse) and strong customization</p>
 <span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="va">buildInputs</span> <span class="op">=</span> <span class="op">[</span> pkgs.make pkgs.gcc <span class="op">];</span></span>
 <span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="va">buildPhase</span> <span class="op">=</span> <span class="st">&quot;make&quot;</span><span class="op">;</span></span>
 <span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<aside class="notes">
+</section>
+<section id="nix-package-realistic-1" class="slide level2">
+<h2>Nix package (realistic)</h2>
+<div class="sourceCode" id="cb13"><pre class="sourceCode nix"><code class="sourceCode nix"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creates isolated build environment (BE), runs big builder script</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>pkgs.stdenv.mkDerivation <span class="op">{</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="va">name</span> <span class="op">=</span> <span class="st">&quot;hello-2.12.1&quot;</span><span class="op">;</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Copied into BE, can also be remote like Github.</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="va">src</span> <span class="op">=</span> <span class="ss">./src</span><span class="op">;</span> </span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Apps added as PATH to BE.</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="va">buildInputs</span> <span class="op">=</span> <span class="op">[</span> pkgs.make pkgs.gcc <span class="op">];</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Builder script customization hooks.</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># &quot;Phases&quot; get called as Bash functions.</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="va">buildPhase</span> <span class="op">=</span> <span class="st">&quot;make build&quot;</span><span class="op">;</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Write final artifact into folder $out.</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># $out is &quot;/nix/store/v6x3cs39...-hello-2.12.1&quot;</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="va">installPhase</span> <span class="op">=</span> <span class="st">&quot;make install&quot;</span><span class="op">;</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p><small style="font-size: 9pt">
-https://github.com/NixOS/nixpkgs/pkgs/by-name/he/hello/package.nix
+https://github.com/NixOS/nixpkgs/blob/master/pkgs/stdenv/generic/setup.sh
 </small></p>
+<p><small style="font-size: 9pt">
+https://nixos.org/manual/nixpkgs/stable/#sec-stdenv-phases </small></p>
+<aside class="notes">
+<p>https://github.com/NixOS/nixpkgs/pkgs/by-name/he/hello/package.nix
+https://nixos.org/manual/nixpkgs/stable/#sec-using-stdenv</p>
 </aside>
 </section>
 <section id="nixpkgs" class="slide level2">
 <h2>Nixpkgs</h2>
 <p><a href>https://github.com/NixOS/nixpkgs</a></p>
 <p>is just a huge attribute set:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode nix"><code class="sourceCode nix"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pkgs = ...fetch github/nixpkgs ...;</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="va">stdenv</span> <span class="op">=</span> <span class="op">{</span> <span class="va">mkDerivation</span> <span class="op">=</span> .. <span class="op">;</span> ... <span class="op">};</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="va">firefox</span> <span class="op">=</span> ...<span class="op">;</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="va">gcc</span> <span class="op">=</span> ...<span class="op">;</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="va">git</span> <span class="op">=</span> ...<span class="op">;</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="va">poetry</span> <span class="op">=</span> stdenv.mkDerivation <span class="op">{...</span> <span class="va">python311</span> <span class="op">...};</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="va">python311</span> <span class="op">=</span> ...<span class="op">;</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  ...</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode nix"><code class="sourceCode nix"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pkgs = ...fetch github/nixpkgs ...;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="va">stdenv</span> <span class="op">=</span> <span class="op">{</span> <span class="va">mkDerivation</span> <span class="op">=</span> .. <span class="op">;</span> ... <span class="op">};</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="va">firefox</span> <span class="op">=</span> ...<span class="op">;</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="va">gcc</span> <span class="op">=</span> ...<span class="op">;</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="va">git</span> <span class="op">=</span> ...<span class="op">;</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="va">poetry</span> <span class="op">=</span> stdenv.mkDerivation <span class="op">{...</span> <span class="va">python311</span> <span class="op">...};</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="va">python311</span> <span class="op">=</span> ...<span class="op">;</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  ...</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <aside class="notes">
 <p>huge package set ca 1.5GB quite fast because lazy and mkDerivation
 functions aren’t called if not used</p>
@@ -680,40 +697,40 @@ functions aren’t called if not used</p>
 </section>
 <section id="nix-store" class="slide level2">
 <h2>Nix Store</h2>
-<pre class="shell"><code># build artifact, put into Nix store
+<pre class="shell"><code># Evaluate &amp; build artifact
 $ nix build &lt;package&gt;   </code></pre>
-<div class="sourceCode" id="cb15"><pre class="sourceCode nix"><code class="sourceCode nix"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># &quot;Evaluation&quot;</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">## Step: Evaluate Nix code to raw derivation</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="ss">/nix/store/fdffffkdfj23-hello-1.2.0.drv</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co"># &quot;Realisation&quot; (=build)</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Step: Fetch/copy all inputs (sourcecode, configs, etc.)</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="ss">/nix/store/9234jfkdfj23-hello-1.2.0.tar.gz</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Step: Build dependencies</span></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="ss">/nix/store/34234sdfjskd-gcc-13.3.0</span></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>...</span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Step: Build final artifact like executable</span></span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="ss">/nix/store/v6x3cs394jgq-hello-1.2.0</span></span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>...</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode nix"><code class="sourceCode nix"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># &quot;Evaluation&quot;</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co">## Step: Evaluate Nix code to raw derivation</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="ss">/nix/store/fdffffkdfj23-hello-2.12.1.drv</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"># &quot;Realisation&quot; (=build)</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Step: Fetch/copy all inputs (sourcecode, configs, etc.)</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="ss">/nix/store/9234jfkdfj23-hello-2.12.1.tar.gz</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Step: Build dependencies</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="ss">/nix/store/34234sdfjskd-gcc-13.3.0</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>...</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Step: Build final artifact like executable</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="ss">/nix/store/v6x3cs394jgq-hello-2.12.1</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>...</span></code></pre></div>
 </section>
 <section id="task-0-bash" class="slide level2">
 <h2>Task 0 Bash</h2>
 <p>Try out <code class="sourceCode nix">mkDerivation</code>.</p>
 <div class="columns">
 <div class="column" style="width:60%;">
-<div class="sourceCode" id="cb16"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> task-0-bash</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Try (won&#39;t work)</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="ex">./my-script.sh</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Fix it:</span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-build</span> my-script.package.nix</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Fix it until this works</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="ex">./result/bin/my-script</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Bonus: </span></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-shell</span> my-script.package.nix</span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Now try again (why does it work?)</span></span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="ex">./my-script.sh</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> task-0-bash</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Try (won&#39;t work)</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="ex">./my-script.sh</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Fix it:</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-build</span> my-script.package.nix</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Fix it until this works</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="ex">./result/bin/my-script</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Bonus: </span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-shell</span> my-script.package.nix</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Now try again (why does it work?)</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="ex">./my-script.sh</span></span></code></pre></div>
 </div><div class="column" style="width:40%;">
 <p>Hints:</p>
 <ul>
@@ -724,20 +741,20 @@ $ nix build &lt;package&gt;   </code></pre>
 </div>
 </div>
 </section>
-<section id="builder-functions" class="slide level2">
+<section id="builder-functions-1" class="slide level2">
 <h2>Builder (functions)</h2>
 <p>Nix community provides convenient variations for different
 ecosystems.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode nix"><code class="sourceCode nix"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>pkgs.stdenv.mkDerivation    <span class="co"># C/C++. (Base for most others)</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>pkgs.writeShellApplication  <span class="co"># Bash scripts.</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>pkgs.mkSbtDerivation        <span class="co"># Scala apps. (3rd party)</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>pkgs.buildPythonApplication <span class="co"># Python apps.</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>pkgs.mkShell                <span class="co"># Shell developer environments.</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>pkgs.dockerTools.buildImage <span class="co"># Docker images.</span></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>...</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>pkgs.buildRustApplication   <span class="co"># Rust apps.</span></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>pkgs.pkgsCross.aarch64<span class="op">-</span>darwin... <span class="co"># Builders for cross-compile.</span></span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>...</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode nix"><code class="sourceCode nix"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>pkgs.stdenv.mkDerivation    <span class="co"># C/C++. (Base for most others)</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>pkgs.writeShellApplication  <span class="co"># Bash scripts.</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>pkgs.mkSbtDerivation        <span class="co"># Scala apps. (3rd party)</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>pkgs.buildPythonApplication <span class="co"># Python apps.</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>pkgs.mkShell                <span class="co"># Shell developer environments.</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>pkgs.dockerTools.buildImage <span class="co"># Docker images.</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>...</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>pkgs.buildRustApplication   <span class="co"># Rust apps.</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>pkgs.pkgsCross.aarch64<span class="op">-</span>darwin... <span class="co"># Builders for cross-compile.</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>...</span></code></pre></div>
 <p><small style="font-size: 9pt"> Search on https://noogle.dev
 </small></p>
 </section>
@@ -746,11 +763,11 @@ ecosystems.</p>
 <p>Try out <code class="sourceCode nix">writeShellApplication</code>.</p>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div class="sourceCode" id="cb18"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> task-1-bash-better</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-build</span> my-script.package.nix</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Fix it until this works:</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="ex">./result/bin/my-script</span></span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> task-1-bash-better</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-build</span> my-script.package.nix</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Fix it until this works:</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="ex">./result/bin/my-script</span></span></code></pre></div>
 </div><div class="column" style="width:60%;">
 <p>Hints:</p>
 <ul>
@@ -767,11 +784,11 @@ to read file as String.</li>
 <p>Try out <code class="sourceCode nix">mkSbtDerivation</code>.</p>
 <div class="columns">
 <div class="column" style="width:60%;">
-<div class="sourceCode" id="cb19"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> task-2-scala</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-build</span> my-scala.package.nix</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Fix it until this works:</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="ex">./result/bin/my-scala</span></span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> task-2-scala</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-build</span> my-scala.package.nix</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Fix it until this works:</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="ex">./result/bin/my-scala</span></span></code></pre></div>
 </div><div class="column" style="width:40%;">
 <p>Hints:</p>
 <ul>
@@ -785,14 +802,14 @@ to read file as String.</li>
 <section id="task-3-scala-docker" class="slide level2">
 <h2>Task 3 Scala Docker</h2>
 <p>Try out <code class="sourceCode nix">buildImage</code>.</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> task-3-scala-docker</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-build</span> my-docker.package.nix</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Fix it until this works:</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> load <span class="op">&lt;</span> result</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="op">&lt;</span>image-tag<span class="op">&gt;</span></span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Quirk: ARM Mac needs cross-compiled ARM Linux image. Use</span></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="ex">pkgsCross</span> = pkgs.pkgsCross.aarch64-linux<span class="kw">;</span></span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> task-3-scala-docker</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-build</span> my-docker.package.nix</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Fix it until this works:</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> load <span class="op">&lt;</span> result</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="op">&lt;</span>image-tag<span class="op">&gt;</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Quirk: ARM Mac needs cross-compiled ARM Linux image. Use</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="ex">pkgsCross</span> = pkgs.pkgsCross.aarch64-linux<span class="kw">;</span></span></code></pre></div>
 </section>
 <section id="further-study" class="slide level2">
 <h2>Further Study</h2>

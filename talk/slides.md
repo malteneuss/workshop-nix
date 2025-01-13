@@ -23,12 +23,10 @@ By Tim Cuthbertson CC BY 4.0, https://nixos.org
 ::: {.column width="50%"}
 **Nix**
 
-* Language
-* Package Bash
-* Package Scala
-* Package Python
-* Package Developer Environments
-* Package Docker Images
+* Motivation
+* Nix Language
+* Builders (Bash, Scala, Docker etc.)
+* Exercises
 
 :::
 ::::::::::::::
@@ -45,20 +43,19 @@ switching between projects is easy, effortless, fast
 containerizsable into docker
 :::
 
-## Build (any) artifact
-
-TODO image sourcecode, compiler, builder script, output
-
-## Build (any) artifact
+## Motivation: Build (any) artifact
 
 **"To package in Nix"** means to write a declarative build plan
 called "derivation" containing
 
-* Project name
 * Source code
 * Compiler (build & runtime dependencies)
 * "Builder" shell script (that runs compiler on source code)
 * ...
+
+::: notes
+Pin everything that modifies final build artifact.
+:::
 
 ## Derivation
 
@@ -70,7 +67,7 @@ $ nix derivation show nixpkgs#hello
 {
   "/nix/store/23m1fng1dpfyb-hello-2.12.1.drv": {
     "args": [
-      # Builder shell script
+      # "Builder" shell script with customization hooks
       "/nix/store/v6x3cs394jg-default-builder.sh"
     ],
     "env": {
@@ -200,7 +197,7 @@ g(3,4)
 :::
 ::::::::::::::
 
-## Functions
+## Builder Functions
 
 ```nix
 # Definition somewhere in https://github.com/NixOS/nixpkgs
@@ -244,11 +241,36 @@ pkgs.stdenv.mkDerivation {
 }
 ```
 
-::: notes
+## Nix package (realistic)
+
+```nix
+# Creates isolated build environment (BE), runs big builder script
+pkgs.stdenv.mkDerivation {
+  name = "hello-2.12.1";
+  # Copied into BE, can also be remote like Github.
+  src = ./src; 
+  # Apps added as PATH to BE.
+  buildInputs = [ pkgs.make pkgs.gcc ];
+  # Builder script customization hooks.
+  # "Phases" get called as Bash functions.
+  buildPhase = "make build";
+  # Write final artifact into folder $out.
+  # $out is "/nix/store/v6x3cs39...-hello-2.12.1"
+  installPhase = "make install";
+}
+```
+
 <small style="font-size: 9pt">
-https://github.com/NixOS/nixpkgs/pkgs/by-name/he/hello/package.nix
+https://github.com/NixOS/nixpkgs/blob/master/pkgs/stdenv/generic/setup.sh
 </small>
 
+<small style="font-size: 9pt">
+https://nixos.org/manual/nixpkgs/stable/#sec-stdenv-phases
+</small>
+
+::: notes
+https://github.com/NixOS/nixpkgs/pkgs/by-name/he/hello/package.nix
+https://nixos.org/manual/nixpkgs/stable/#sec-using-stdenv
 :::
 
 ## Nixpkgs
@@ -279,23 +301,23 @@ quite fast because lazy and mkDerivation functions aren't called if not used
 ## Nix Store
 
 ```shell
-# build artifact, put into Nix store
+# Evaluate & build artifact
 $ nix build <package>   
 ```
 
 ```nix
 # "Evaluation"
 ## Step: Evaluate Nix code to raw derivation
-/nix/store/fdffffkdfj23-hello-1.2.0.drv
+/nix/store/fdffffkdfj23-hello-2.12.1.drv
 
 # "Realisation" (=build)
 # Step: Fetch/copy all inputs (sourcecode, configs, etc.)
-/nix/store/9234jfkdfj23-hello-1.2.0.tar.gz
+/nix/store/9234jfkdfj23-hello-2.12.1.tar.gz
 # Step: Build dependencies
 /nix/store/34234sdfjskd-gcc-13.3.0
 ...
 # Step: Build final artifact like executable
-/nix/store/v6x3cs394jgq-hello-1.2.0
+/nix/store/v6x3cs394jgq-hello-2.12.1
 ...
 ```
 
