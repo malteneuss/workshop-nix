@@ -743,7 +743,7 @@ $ nix build &lt;package&gt;   </code></pre>
 </section>
 <section id="builder-functions-1" class="slide level2">
 <h2>Builder (functions)</h2>
-<p>Nix community provides convenient variations for different
+<p>Nix community provides convenient “builders” for different
 ecosystems.</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode nix"><code class="sourceCode nix"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>pkgs.stdenv.mkDerivation    <span class="co"># C/C++. (Base for most others)</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>pkgs.writeShellApplication  <span class="co"># Bash scripts.</span></span>
@@ -807,7 +807,7 @@ to read file as String.</li>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-build</span> my-docker.package.nix</span>
 <span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Fix it until this works:</span></span>
 <span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> load <span class="op">&lt;</span> result</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="op">&lt;</span>image-tag<span class="op">&gt;</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="op">&lt;</span>name:tag<span class="op">&gt;</span></span>
 <span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Quirk: ARM Mac needs cross-compiled ARM Linux image. Use</span></span>
 <span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="ex">pkgsCross</span> = pkgs.pkgsCross.aarch64-linux<span class="kw">;</span></span></code></pre></div>
 </section>

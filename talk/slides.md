@@ -358,7 +358,7 @@ Hints:
 
 ## Builder (functions)
 
-Nix community provides convenient variations for different ecosystems.
+Nix community provides convenient "builders" for different ecosystems.
 
 ```nix
 pkgs.stdenv.mkDerivation    # C/C++. (Base for most others)
@@ -441,7 +441,7 @@ cd task-3-scala-docker
 nix-build my-docker.package.nix
 # Fix it until this works:
 docker load < result
-docker run <image-tag>
+docker run <dockername:tag>
 # Quirk: ARM Mac needs cross-compiled ARM Linux image. Use
 pkgsCross = pkgs.pkgsCross.aarch64-linux;
 ```
