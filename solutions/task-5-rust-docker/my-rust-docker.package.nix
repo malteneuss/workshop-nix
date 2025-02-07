@@ -20,14 +20,6 @@ in pkgs.dockerTools.buildImage {
   tag = "latest";
 # Quick and dirty
   config.Cmd = [ "${my-app}/bin/my-rust" ];
-  # The same app but remote: https://github.com/malteneuss/rust-dummy-website
-  # my-app = import (pkgs.fetchFromGitHub {
-  #   owner = "malteneuss";
-  #   repo = "rust-dummy-website";
-  #   rev = "c621243f4e25d8da4884646cd12d0c795a0b8de7";
-  #   sha256 = "sha256-p0WUtmE4/Lm2d9VafYedzuIJJPrcxAIaDiQLCwSNHT4=";
-  # }) { inherit pkgs; };
-  # "${my-app}/bin/subpackage"
   # copyToRoot = pkgs.buildEnv {
   #   name = "image-root";
   #   # What apps to copy to the image, and symlink inside /bin
